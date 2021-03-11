@@ -16,10 +16,18 @@ const envVarsSchema = joi
     DATABASE_URL: joi
       .string()
       .when('NODE_ENV', { is: 'production', then: joi.string().required() }),
-    PGHOST: joi.string().required(),
-    PGUSER: joi.string().required(),
-    PGPASSWORD: joi.string().required(),
-    PGDATABASE: joi.string().required(),
+    PGHOST: joi
+      .string()
+      .when('NODE_ENV', { is: 'development', then: joi.string().required() }),
+    PGUSER: joi
+      .string()
+      .when('NODE_ENV', { is: 'development', then: joi.string().required() }),
+    PGPASSWORD: joi
+      .string()
+      .when('NODE_ENV', { is: 'development', then: joi.string().required() }),
+    PGDATABASE: joi
+      .string()
+      .when('NODE_ENV', { is: 'development', then: joi.string().required() }),
     PGPORT: joi.number().port().required().default(5432),
     DATABASE_LOGGING: joi
       .boolean()
