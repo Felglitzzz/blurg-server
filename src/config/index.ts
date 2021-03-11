@@ -28,7 +28,7 @@ const envVarsSchema = joi
     PGDATABASE: joi
       .string()
       .when('NODE_ENV', { is: 'development', then: joi.string().required() }),
-    PGPORT: joi.number().port().required().default(5432),
+    PGPORT: joi.number().port().default(5432),
     DATABASE_LOGGING: joi
       .boolean()
       .truthy('x')
