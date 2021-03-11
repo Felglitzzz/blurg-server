@@ -4,7 +4,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 let env = {};
 if (isProduction) {
-  env.DATABASE_URL = process.env.DATABASE_URL;
+  env.url = process.env.DATABASE_URL;
 } else {
   env.host = process.env.PGHOST;
   env.port = Number.parseInt(process.env.PGPORT, 2);
