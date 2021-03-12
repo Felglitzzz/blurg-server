@@ -19,14 +19,8 @@ export class SaveBlogInput {
   @Field(() => String, { nullable: true })
   image: string;
 
-  @Field(() => BlogType, { nullable: true })
-  blogType: BlogType;
-
   @Field(() => Date, { nullable: true })
   publishedDate: Date;
-
-  @Field(() => String, { nullable: true })
-  categoryName: string;
 }
 
 @InputType()
@@ -45,9 +39,6 @@ export class BlogFilterInput {
   @Field(() => Int, { nullable: true, defaultValue: 50 })
   @IsOptional()
   take?: number;
-
-  @Field(() => String, { nullable: true })
-  category?: string;
 }
 
 @ObjectType()

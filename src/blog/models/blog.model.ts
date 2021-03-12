@@ -11,7 +11,6 @@ import { IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ProfileModel } from '@blurg/src/users/models/profile.model';
 import { BlogType } from '../enums';
-import { BlogCategoryModel } from './blog-category.model';
 
 registerEnumType(BlogType, {
   name: 'BlogType',
@@ -34,19 +33,6 @@ export class BlogModel {
   @Column({ name: 'content', nullable: true, type: 'text' })
   content: string;
 
-  @Field(() => String)
-  @Column({ name: 'image', nullable: true, type: 'text' })
-  image: string;
-
-  @Field(() => BlogType)
-  @Column({
-    name: 'blog_type',
-    nullable: true,
-    type: 'text',
-    default: BlogType.Draft,
-  })
-  blogType: BlogType;
-
   @Field({ nullable: false })
   @CreateDateColumn({ name: 'created_date' })
   @Type(() => Date)
@@ -57,24 +43,12 @@ export class BlogModel {
   @Type(() => Date)
   updatedDate?: Date;
 
-  @Field({ nullable: true })
-  @Column({ name: 'published_date', nullable: true, type: 'date' })
-  @Type(() => Date)
-  publishedDate?: Date;
-
   @Field(() => ProfileModel)
   @ManyToOne(() => ProfileModel, (profile) => profile.blogs, {
     onDelete: 'CASCADE',
     eager: true,
   })
   profile: ProfileModel;
-
-  @Field(() => BlogCategoryModel)
-  @ManyToOne(() => BlogCategoryModel, {
-    eager: true,
-    cascade: true,
-  })
-  category: BlogCategoryModel;
 
   constructor(blog: Partial<BlogModel>) {
     Object.assign(this, blog);

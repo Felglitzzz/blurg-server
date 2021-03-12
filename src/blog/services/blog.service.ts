@@ -1,14 +1,8 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
-import {
-  BlogFilterInput,
-  BlogResponse,
-  DeleteBlogInput,
-  SaveBlogInput,
-} from '../types';
+import { BlogResponse, DeleteBlogInput, SaveBlogInput } from '../types';
 import { BlogRepository } from '../repositories/blog.repository';
 import { BlogModel } from '../models/blog.model';
-import { BlogCategoryModel } from '../models/blog-category.model';
 import { ProfileModel } from '@blurg/src/users/models/profile.model';
 import { UserModel } from '@blurg/src/users/models/user.model';
 
@@ -20,21 +14,15 @@ export class BlogService {
   ) {}
 
   async saveBlog(user: UserModel, input: SaveBlogInput) {
-    const { categoryName, id } = input;
+    const { id } = input;
     let blog = {};
 
     if (id) {
       blog = await this.repository.findOne(id);
     }
 
-    let category = await this.entityManager.findOne(BlogCategoryModel, {
-      name: categoryName,
-    });
-
-    category = category || new BlogCategoryModel({ name: categoryName });
-
     return this.repository.save(
-      new BlogModel({ ...blog, ...input, category, profile: user.profile }),
+      new BlogModel({ ...blog, ...input, profile: user.profile }),
     );
   }
 
@@ -51,52 +39,36 @@ export class BlogService {
     return blog;
   }
 
-  async findByProfile(
-    profile: ProfileModel,
-    input: BlogFilterInput,
-  ): Promise<BlogResponse> {
-    const { skip, take, category } = input;
-
+  async findByProfile(profile: ProfileModel): Promise<BlogResponse> {
     const query = this.repository
       .createQueryBuilder('blogs')
       .leftJoinAndSelect('blogs.profile', 'profile')
-      .leftJoinAndSelect('blogs.category', 'category')
       .where('profile.id = :profileId', { profileId: profile.id });
 
-    if (category) {
-      query.andWhere('blogs.category ILIKE :category', {
-        category: `${category}%`,
-      });
-    }
-
     const responses = await query
-      .skip(skip)
-      .take(take)
       .orderBy('blogs.updatedDate', 'DESC')
       .getManyAndCount();
 
     return new BlogResponse(...responses);
   }
 
-  async fetchAllBlogs(input: BlogFilterInput): Promise<BlogResponse> {
-    const { category, skip, take } = input;
+  async fetchAllBlogs(): Promise<BlogResponse> {
     const query = this.repository
       .createQueryBuilder('blogs')
-      .leftJoinAndSelect('blogs.profile', 'profile')
-      .leftJoinAndSelect('blogs.category', 'category');
-
-    if (category) {
-      query.where('blogs.category ILIKE :category', {
-        category: `${category}%`,
-      });
-    }
+      .leftJoinAndSelect('blogs.profile', 'profile');
 
     const responses = await query
-      .skip(skip)
-      .take(take)
       .orderBy('blogs.updatedDate', 'DESC')
       .getManyAndCount();
 
     return new BlogResponse(...responses);
+  }
+
+  async fetchOneBlog(id: string): Promise<BlogModel> {
+    const blog = await this.repository.findOne(id);
+    if (!blog) {
+      throw new NotFoundException('Blog Does Not Exist!');
+    }
+    return blog;
   }
 }

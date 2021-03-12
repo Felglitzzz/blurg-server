@@ -31,6 +31,11 @@ export class ProfileModel {
   @Column({ name: 'lastName', nullable: false, type: 'text' })
   lastName: string;
 
+  @Field(() => String)
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
   @Field(() => String, { nullable: true })
   @Column({ name: 'phone_number', nullable: true, type: 'text' })
   phoneNumber: string;

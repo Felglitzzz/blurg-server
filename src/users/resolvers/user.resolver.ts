@@ -26,15 +26,7 @@ export class UserResolver {
   }
 
   @ResolveField('blogs', () => BlogResponse, { nullable: true })
-  async getBlogs(
-    @Parent() user: UserModel,
-    @Args({
-      name: 'blogFilterInput',
-      type: () => BlogFilterInput,
-      nullable: true,
-    })
-    input: BlogFilterInput,
-  ): Promise<BlogResponse> {
-    return this.blogService.findByProfile(user.profile, input);
+  async getBlogs(@Parent() user: UserModel): Promise<BlogResponse> {
+    return this.blogService.findByProfile(user.profile);
   }
 }

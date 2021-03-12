@@ -1,11 +1,6 @@
-import { Resolver, Mutation, Args, Int, Query } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { BlogModel } from '../models/blog.model';
-import {
-  BlogFilterInput,
-  BlogResponse,
-  DeleteBlogInput,
-  SaveBlogInput,
-} from '../types';
+import { BlogResponse, DeleteBlogInput, SaveBlogInput } from '../types';
 import { BlogService } from '../services/blog.service';
 import { CurrentUser } from '@blurg/src/shared/decorators/current-user.decorator';
 import { UserModel } from '@blurg/src/users/models/user.model';
@@ -44,14 +39,19 @@ export class BlogResolver {
   }
 
   @Query(() => BlogResponse)
-  async fetchAllBlogs(
+  async fetchAllBlogs(): Promise<BlogResponse> {
+    return this.blogService.fetchAllBlogs();
+  }
+
+  @Query(() => BlogModel)
+  async fetchOneBlog(
     @Args({
-      name: 'blogFilterInput',
-      type: () => BlogFilterInput,
+      name: 'id',
+      type: () => String,
       nullable: true,
     })
-    input: BlogFilterInput,
-  ): Promise<BlogResponse> {
-    return this.blogService.fetchAllBlogs(input);
+    id: string,
+  ): Promise<BlogModel> {
+    return this.blogService.fetchOneBlog(id);
   }
 }
