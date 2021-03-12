@@ -24,15 +24,15 @@ export class ProfileModel {
   id: string;
 
   @Field(() => String)
-  @Column({ name: 'firstName', nullable: false, unique: true, type: 'text' })
+  @Column({ name: 'firstName', nullable: false, type: 'text' })
   firstName: string;
 
   @Field(() => String)
-  @Column({ name: 'lastName', nullable: false, unique: true, type: 'text' })
+  @Column({ name: 'lastName', nullable: false, type: 'text' })
   lastName: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ name: 'phone_number', nullable: true, unique: true })
+  @Column({ name: 'phone_number', nullable: true, type: 'text' })
   phoneNumber: string;
 
   @Field(() => String, { nullable: true })
