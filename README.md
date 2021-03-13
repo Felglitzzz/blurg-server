@@ -24,7 +24,7 @@ Click [here](https://documenter.getpostman.com/view/2988092/Tz5p6xqZ) to view th
 $ git clone https://github.com/Felglitzzz/blurg-server.git
 
 # cd to blurg server
-$ cd blurg-server/
+$ cd ./blurg-server
 
 # Install Dependencies
 $ yarn install
